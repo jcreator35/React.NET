@@ -56,8 +56,8 @@ app.UseReact(config =>
   // your components as well as all of their dependencies.
   // See http://reactjs.net/ for more information. Example:
   //config
-  //	.AddScript("~/Scripts/First.jsx")
-  //	.AddScript("~/Scripts/Second.jsx");
+  //	.AddScript("~/js/First.jsx")
+  //	.AddScript("~/js/Second.jsx");
 
   // If you use an external build too (for example, Babel, Webpack,
   // Browserify or Gulp), you can improve performance by disabling
@@ -75,10 +75,11 @@ Finally, add this to `Views\_ViewImports.cshtml` (or create it if it doesn't exi
 @using React.AspNet
 ```
 
-Reference JSX files directly in script tags:
+Reference JSX files directly in script tags at the end of the page:
 
 ```html
 <script src="~/Content/Sample.jsx"></script>
+@Html.ReactInitJavaScript();
 ```
 
 You're done! You can now call `Html.React` from within Razor files:
@@ -87,6 +88,6 @@ You're done! You can now call `Html.React` from within Razor files:
 @Html.React("Sample", new { initialComments = Model.Comments, page = Model.Page })
 ```
 
-If you need support for non-Windows platforms, please see the [OS X/Linux guide](/getting-started/chakracore.html)
+If you need support for non-Windows platforms, please see the [Linux/macOS guide](/getting-started/chakracore.html)
 
 Check out the [sample project](https://github.com/reactjs/React.NET/tree/master/src/React.Sample.Webpack.CoreMvc) for a working demo.

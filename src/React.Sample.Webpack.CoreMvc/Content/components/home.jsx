@@ -13,6 +13,7 @@ import { CommentsBox } from './comments/Sample.jsx';
 import { StyledComponentsDemo } from './styled-components.jsx';
 import { EmotionDemo } from './emotion.jsx';
 import { ReactJssDemo } from './react-jss.jsx';
+import { LazyLoadDemo } from './lazy-load.jsx';
 
 class Navbar extends Component {
 	render() {
@@ -32,6 +33,9 @@ class Navbar extends Component {
 				</li>
 				<li>
 					<Link to="/emotion">Emotion Demo</Link>
+				</li>
+				<li>
+					<Link to="/lazy-load">Lazy loading demo</Link>
 				</li>
 			</ul>
 		);
@@ -81,6 +85,7 @@ export default class HomeComponent extends Component {
 						/>
 						<Route path="/react-jss" component={ReactJssDemo} />
 						<Route path="/emotion" component={EmotionDemo} />
+						<Route path="/lazy-load" component={LazyLoadDemo} />
 						<Route
 							path="*"
 							component={({ staticContext }) => {

@@ -13,6 +13,7 @@ using JSPool;
 using Moq;
 using Xunit;
 using React.Exceptions;
+using System.IO;
 
 namespace React.Tests.Core
 {
@@ -126,6 +127,21 @@ namespace React.Tests.Core
 		}
 
 		[Fact]
+		public void GetInitJavaScript()
+		{
+			var mocks = new Mocks();
+			var environment = mocks.CreateReactEnvironment();
+
+			var component = new Mock<IReactComponent>();
+
+			component.Setup(x => x.RenderJavaScript(It.IsAny<TextWriter>(), It.IsAny<bool>())).Callback((TextWriter writer, bool waitForDOMContentLoad) => writer.Write(waitForDOMContentLoad ? "waiting for page load JS" : "JS")).Verifiable();
+
+			environment.CreateComponent(component.Object);
+
+			Assert.Equal("JS;" + Environment.NewLine, environment.GetInitJavaScript());
+		}
+
+		[Fact]
 		public void ServerSideOnlyComponentRendersNoJavaScript()
 		{
 			var mocks = new Mocks();
@@ -134,6 +150,24 @@ namespace React.Tests.Core
 			environment.CreateComponent("HelloWorld", new { name = "Daniel" }, serverOnly: true);
 
 			Assert.Equal(string.Empty, environment.GetInitJavaScript());
+		}
+
+		[Theory]
+		[InlineData(false, 0)]
+		[InlineData(true, 1)]
+		public void SSRInitSkippedIfNoComponents(bool renderComponent, int ssrTimes)
+		{
+			var mocks = new Mocks();
+			var environment = mocks.CreateReactEnvironment();
+
+			if (renderComponent)
+			{
+				environment.CreateComponent("HelloWorld", new { name = "Daniel" }, clientOnly: true).RenderHtml();
+			}
+
+			environment.GetInitJavaScript();
+
+			mocks.Engine.Verify(x => x.Evaluate<string>("console.getCalls()"), Times.Exactly(ssrTimes));
 		}
 
 		public class Mocks

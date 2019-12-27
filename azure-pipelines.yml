@@ -2,11 +2,12 @@ trigger:
     - master
 
 pool:
-    vmImage: 'VS2017-Win2016'
+    vmImage: 'windows-2019'
 
 variables:
     buildPlatform: 'Any CPU'
     buildConfiguration: 'Release'
+    buildType: 'Release'
 
 steps:
     - task: NodeTool@0
@@ -14,6 +15,11 @@ steps:
           versionSpec: '10.x'
 
     - script: npm install --global npm
+
+    - task: DotNetCoreInstaller@0
+      inputs:
+        packageType: 'sdk'
+        version: '3.0.100'
 
     - task: VSBuild@1
       inputs:

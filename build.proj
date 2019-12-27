@@ -10,8 +10,8 @@ of patent rights can be found in the PATENTS file in the same directory.
 <Project ToolsVersion="4.0" DefaultTargets="Build;Test;Package" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<PropertyGroup>
 		<Major>5</Major>
-		<Minor>0</Minor>
-		<Build>0-alpha2</Build>
+		<Minor>1</Minor>
+		<Build>2</Build>
 		<Revision>0</Revision>
 		<DevNuGetServer>http://reactjs.net/packages/</DevNuGetServer>
 		<MSBuildCommunityTasksPath>$(MSBuildProjectDirectory)\tools\MSBuildTasks</MSBuildCommunityTasksPath>
@@ -54,6 +54,10 @@ of patent rights can be found in the PATENTS file in the same directory.
 		/>
 		<Exec
 			WorkingDirectory="src/React.Core/Resources/babel-legacy"
+			Command="npm install"
+		/>
+		<Exec
+			WorkingDirectory="src/React.Sample.Mvc4"
 			Command="npm install"
 		/>
 		<Exec

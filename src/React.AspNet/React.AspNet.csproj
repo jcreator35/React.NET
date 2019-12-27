@@ -5,7 +5,7 @@
     <Copyright>Copyright 2014-Present Facebook, Inc</Copyright>
     <AssemblyTitle>ReactJS.NET (ASP.NET Core MVC)</AssemblyTitle>
     <Authors>Daniel Lo Nigro</Authors>
-    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netcoreapp3.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>React.AspNet</AssemblyName>
     <AssemblyOriginatorKeyFile>../key.snk</AssemblyOriginatorKeyFile>
@@ -13,16 +13,19 @@
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageId>React.AspNet</PackageId>
     <PackageTags>asp.net;mvc;asp;javascript;js;react;facebook;reactjs;vnext;asp.net 5;asp.net core</PackageTags>
-    <PackageIconUrl>http://reactjs.net/img/logo_64.png</PackageIconUrl>
-    <PackageProjectUrl>http://reactjs.net/</PackageProjectUrl>
+    <PackageIcon>logo_64.png</PackageIcon>
+    <PackageProjectUrl>https://github.com/reactjs/react.net</PackageProjectUrl>
     <PackageLicense>https://github.com/reactjs/React.NET#licence</PackageLicense>
 	<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 	<DefineConstants>$(DefineConstants);ASPNETCORE</DefineConstants>
+	<IncludeSymbols>true</IncludeSymbols>
+	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs" />
     <Compile Include="..\SharedAssemblyVersionInfo.cs" />
+    <None Include="..\..\site\jekyll\img\logo_64.png" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -31,7 +34,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Sourcelink.Github" Version="1.0.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.ViewFeatures" Version="2.2.0" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
+    <FrameworkReference Include="Microsoft.AspNetCore.App" Version="3.0.0" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">

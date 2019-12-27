@@ -5,12 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 #if NET452
+using React.Web.Mvc;
+#else
+using React.AspNet;
+#endif
 
 using System;
 using System.IO;
 using System.Security.Cryptography;
 using Moq;
-using React.Web.Mvc;
 using Xunit;
 
 namespace React.Tests.Mvc
@@ -38,7 +41,7 @@ namespace React.Tests.Mvc
 			component.Setup(x => x.RenderHtml(It.IsAny<TextWriter>(), false, false, null, null))
 				.Callback((TextWriter writer, bool renderContainerOnly, bool renderServerOnly, Action<Exception, string, string> exceptionHandler, IRenderFunctions renderFunctions) => writer.Write("HTML"));
 
-			component.Setup(x => x.RenderJavaScript(It.IsAny<TextWriter>())).Callback((TextWriter writer) => writer.Write("JS"));
+			component.Setup(x => x.RenderJavaScript(It.IsAny<TextWriter>(), It.IsAny<bool>())).Callback((TextWriter writer, bool waitForDOMContentLoad) => writer.Write(waitForDOMContentLoad ? "waiting for page load JS" : "JS"));
 
 			var environment = ConfigureMockEnvironment();
 			environment.Setup(x => x.CreateComponent(
@@ -57,8 +60,25 @@ namespace React.Tests.Mvc
 			).ToHtmlString();
 
 			Assert.Equal(
-				"HTML" + System.Environment.NewLine + "<script>JS</script>",
+				"HTML" + System.Environment.NewLine + "<script>waiting for page load JS</script>",
 				result.ToString()
+			);
+		}
+
+		[Fact]
+		public void GetInitJavaScriptReturns()
+		{
+			var component = new Mock<IReactComponent>();
+
+			var environment = ConfigureMockEnvironment();
+
+			environment.Setup(x => x.GetInitJavaScript(It.IsAny<TextWriter>(), It.IsAny<bool>())).Callback((TextWriter writer, bool clientOnly) => writer.Write("JS"));
+
+			var renderJSResult = HtmlHelperExtensions.ReactInitJavaScript(htmlHelper: null, clientOnly: false);
+
+			Assert.Equal(
+				"<script>JS</script>",
+				renderJSResult.ToString()
 			);
 		}
 
@@ -77,7 +97,7 @@ namespace React.Tests.Mvc
 			component.Setup(x => x.RenderHtml(It.IsAny<TextWriter>(), false, false, null, null))
 				.Callback((TextWriter writer, bool renderContainerOnly, bool renderServerOnly, Action<Exception, string, string> exceptionHandle, IRenderFunctions renderFunctions) => writer.Write("HTML")).Verifiable();
 
-			component.Setup(x => x.RenderJavaScript(It.IsAny<TextWriter>())).Callback((TextWriter writer) => writer.Write("JS")).Verifiable();
+			component.Setup(x => x.RenderJavaScript(It.IsAny<TextWriter>(), It.IsAny<bool>())).Callback((TextWriter writer, bool waitForDOMContentLoad) => writer.Write(waitForDOMContentLoad ? "waiting for page load JS" : "JS")).Verifiable();
 
 			var config = new Mock<IReactSiteConfiguration>();
 
@@ -101,7 +121,7 @@ namespace React.Tests.Mvc
 			).ToHtmlString();
 
 			Assert.Equal(
-				"HTML" + System.Environment.NewLine + "<script>JS</script>",
+				"HTML" + System.Environment.NewLine + "<script>waiting for page load JS</script>",
 				result.ToString()
 			);
 
@@ -116,7 +136,7 @@ namespace React.Tests.Mvc
 			).ToHtmlString();
 
 			Assert.Equal(
-				"HTML" + System.Environment.NewLine + "<script nonce=\"" + nonce + "\">JS</script>",
+				"HTML" + System.Environment.NewLine + "<script nonce=\"" + nonce + "\">waiting for page load JS</script>",
 				result.ToString()
 			);
 		}
@@ -217,7 +237,7 @@ namespace React.Tests.Mvc
 			fakeRenderFunctions.Setup(x => x.TransformRenderedHtml(It.IsAny<string>())).Returns("HTML");
 
 			component.Setup(x => x.RenderHtml(It.IsAny<TextWriter>(), It.IsAny<bool>(), It.IsAny<bool>(), It.IsAny<Action<Exception, string, string>>(), It.IsAny<IRenderFunctions>()))
-				.Callback((TextWriter writer, bool renderContainerOnly, bool renderServerOnly, Action<Exception, string, string> exceptionHandler, IRenderFunctions renderFunctions) => 
+				.Callback((TextWriter writer, bool renderContainerOnly, bool renderServerOnly, Action<Exception, string, string> exceptionHandler, IRenderFunctions renderFunctions) =>
 				{
 					renderFunctions.PreRender(_ => "one");
 					writer.Write(renderFunctions.TransformRenderedHtml("HTML"));
@@ -252,4 +272,3 @@ namespace React.Tests.Mvc
 		}
 	}
 }
-#endif
