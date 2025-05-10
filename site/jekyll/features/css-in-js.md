@@ -3,7 +3,7 @@ layout: docs
 title: CSS-in-JS
 ---
 
-Just want to see the code? Check out the [sample project](https://github.com/reactjs/React.NET/tree/master/src/React.Sample.Webpack.CoreMvc).
+Just want to see the code? Check out the [sample project](https://github.com/reactjs/React.NET/tree/main/src/React.Template/reactnet-webpack).
 
 CSS-in-JS is a technique for declaring styles within components. ReactJS.NET supports server-rendered stylesheets for several libraries (pull requests welcome to add support for more!). Your project must be using a Javascript bundler such as webpack already.
 
@@ -12,6 +12,8 @@ Make sure ReactJS.NET is up to date. You will need at least ReactJS.NET 4.0 (whi
 If you're using more than one CSS-in-JS library in your project, we've got you covered! Just pass mutliple server-render helper functions into `ChainedRenderFunctions`, and they will be called in the order they are passed in.
 
 ### [Styled Components](https://github.com/styled-components/styled-components)
+
+#### ⚠️  This may break when styled-components publishes a major update, please look at the [webpack sample](https://github.com/reactjs/React.NET/blob/main/src/React.Template/reactnet-webpack/package.json) for the currently known compatible version.
 
 Expose styled-components in your server bundle:
 
@@ -90,6 +92,8 @@ export function StyledComponentsDemo() {
 ```
 
 ### [React-JSS](https://github.com/cssinjs/react-jss)
+
+#### ⚠️  This may break when react-jss publishes a major update, please look at the [webpack sample](https://github.com/reactjs/React.NET/blob/main/src/React.Template/reactnet-webpack/package.json) for the currently known compatible version.
 
 Expose react-jss in your server bundle:
 
@@ -178,6 +182,8 @@ export class ReactJssDemo extends React.Component {
 ```
 
 ### Emotion
+
+#### ⚠️  This may break when emotion publishes a major update, please look at the [webpack sample](https://github.com/reactjs/React.NET/blob/main/src/React.Template/reactnet-webpack/package.json) for the currently known compatible version.
 
 Emotion's integration with ReactJS.NET only supports rendering inline styles (instead of rendering them in the document head).
 

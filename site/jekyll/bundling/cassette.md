@@ -5,9 +5,9 @@ title: Cassette (ASP.NET 4.x)
 
 > **Note:**
 >
-> This guide applies only to ASP.NET 4.x
+> This guide applies only to ASP.NET 4.x. Please consider using [webpack](/bundling/webpack.html) if possible.
 
-Just want to see the code? Check out the [sample project](https://github.com/reactjs/React.NET/tree/master/src/React.Sample.Cassette).
+Just want to see the code? Check out the [sample project](https://github.com/reactjs/React.NET/tree/main/src/React.Sample.Cassette).
 
 [Cassette](http://getcassette.net/) is an asset bundling library for ASP.NET.
 You can learn more on [its website at getcassette.net](http://getcassette.net/).
@@ -42,13 +42,13 @@ render from your view using Cassette:
 </head>
 <body>
 	...
-	<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/16.8.0/umd/react.development.js"></script>
-	<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.0/umd/react-dom.development.js"></script>
+	<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/16.13.0/umd/react.development.js"></script>
+	<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.13.0/umd/react-dom.development.js"></script>
 	@Bundles.RenderScripts()
 </body>
 ```
 
-See the [React.Samples.Cassette](https://github.com/reactjs/React.NET/tree/master/src/React.Sample.Cassette)
+See the [React.Samples.Cassette](https://github.com/reactjs/React.NET/tree/main/src/React.Sample.Cassette)
 project for an example.
 
 # Precompilation

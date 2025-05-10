@@ -1,11 +1,10 @@
-using System;
 using JavaScriptEngineSwitcher.ChakraCore;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using React.AspNet;
 
 namespace React.Sample.Webpack.CoreMvc
@@ -35,7 +34,7 @@ namespace React.Sample.Webpack.CoreMvc
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-		public void Configure(IApplicationBuilder app)
+		public void Configure(IApplicationBuilder app, IHostEnvironment env)
 		{
 			// Initialise ReactJS.NET. Must be before static files.
 			app.UseReact(config =>
@@ -44,14 +43,16 @@ namespace React.Sample.Webpack.CoreMvc
 					.SetReuseJavaScriptEngines(true)
 					.SetLoadBabel(false)
 					.SetLoadReact(false)
-					.AddScriptWithoutTransform("~/dist/runtime.js")
-					.AddScriptWithoutTransform("~/dist/vendor.js")
-					.AddScriptWithoutTransform("~/dist/components.js");
+					.SetReactAppBuildPath("~/dist");
 			});
+
+			if (env.IsDevelopment())
+			{
+					app.UseDeveloperExceptionPage();
+			}
 
 			app.UseStaticFiles();
 
-#if NETCOREAPP3_0
 			app.UseRouting();
 
 			app.UseEndpoints(endpoints =>
@@ -60,14 +61,6 @@ namespace React.Sample.Webpack.CoreMvc
 				endpoints.MapControllerRoute("comments-root", "comments", new { controller = "Home", action = "Index" });
 				endpoints.MapControllerRoute("comments", "comments/page-{page}", new { controller = "Home", action = "Comments" });
 			});
-#else
-			app.UseMvc(routes =>
-			{
-				routes.MapRoute("default", "{path?}", new { controller = "Home", action = "Index" });
-				routes.MapRoute("comments-root", "comments", new { controller = "Home", action = "Index" });
-				routes.MapRoute("comments", "comments/page-{page}", new { controller = "Home", action = "Comments" });
-			});
-#endif
 		}
 	}
 }

@@ -3,7 +3,7 @@ title: "Use React and JSX in ASP.NET MVC"
 layout: post
 author: Daniel Lo Nigro
 ---
-*Cross-posted from [the official React blog](http://facebook.github.io/react/blog/2014/04/04/reactnet.html).*
+*Cross-posted from [the official React blog](https://reactjs.org/blog/2014/04/04/reactnet.html).*
 ____
 
 Today we're happy to announce the initial release of
@@ -33,7 +33,7 @@ ReactJS.NET is packaged in NuGet. Simply run `Install-Package React.Mvc4` in the
 package manager console or search NuGet for "React" to install it.
 [See the documentation](http://reactjs.net/docs) for more information. The
 GitHub project contains
-[a sample website](https://github.com/reactjs/React.NET/tree/master/src/React.Sample.Mvc4)
+[a sample website](https://github.com/reactjs/React.NET/tree/main/src/React.Sample.Mvc4)
 demonstrating all of the features.
 
 Let us know what you think, and feel free to send through any feedback and

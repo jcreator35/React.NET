@@ -16,8 +16,8 @@ id: home
   <section class="home-section">
     <p>
       ReactJS.NET makes it easier to use Facebook's
-      [React](http://facebook.github.io/react/) and
-      [JSX](http://facebook.github.io/react/docs/jsx-in-depth.html) from C# and
+      [React](https://reactjs.org/) and
+      [JSX](https://reactjs.org/docs/jsx-in-depth.html) from C# and
       other .NET languages, focusing specifically on ASP.NET MVC (although it
       also works in other environments). It supports both ASP.NET 4 (with MVC 4 or 5),
       and ASP.NET Core MVC. It is cross-platform and can run on Linux via Mono
@@ -117,8 +117,8 @@ bundles.Add(new JsxBundle("~/bundles/main").Include(
 })
 
 <!-- Initialise the component in JavaScript too -->
-<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/16.8.0/umd/react.development.js"></script>
-<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.8.0/umd/react-dom.development.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/16.13.0/umd/react.development.js"></script>
+<script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/16.13.0/umd/react-dom.development.js"></script>
 
 @Scripts.Render("~/bundles/main")
 @Html.ReactInitJavaScript()
@@ -131,7 +131,7 @@ bundles.Add(new JsxBundle("~/bundles/main").Include(
   <hr class="home-divider" />
   <section class="home-bottom-section">
     <div class="buttons-unit">
-      <a href="/getting-started/download.html" class="button">Get Started</a>
+      <a href="/getting-started/aspnetcore.html" class="button">Get Started</a>
       <a href="/tutorials/aspnetcore" class="button">Tutorial</a>
     </div>
   </section>

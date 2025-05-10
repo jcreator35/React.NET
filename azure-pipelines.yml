@@ -1,5 +1,6 @@
 trigger:
-    - master
+    - main
+    - ci-updates
 
 pool:
     vmImage: 'windows-2019'
@@ -16,10 +17,11 @@ steps:
 
     - script: npm install --global npm
 
-    - task: DotNetCoreInstaller@0
+    - task: UseDotNet@2
+      displayName: 'Use .NET Core sdk'
       inputs:
         packageType: 'sdk'
-        version: '3.0.100'
+        version: '3.1.x'
 
     - task: VSBuild@1
       inputs:

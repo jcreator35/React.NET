@@ -19,6 +19,26 @@ namespace React.Tests.Core
 {
 	public class ReactEnvironmentTest
 	{
+		private const string _testAppManifest = @"
+			{
+  ""files"": {
+    ""main.css"": ""/static/css/main.43b75f57.chunk.css"",
+    ""main.js"": ""/static/js/main.04394e4f.chunk.js"",
+    ""main.js.map"": ""/static/js/main.04394e4f.chunk.js.map"",
+    ""runtime-main.js"": ""/static/js/runtime-main.62ca1b0d.js"",
+    ""runtime-main.js.map"": ""/static/js/runtime-main.62ca1b0d.js.map"",
+    ""another-stylesheet.css"": ""/static/css/another-stylesheet.css"",
+    ""static/js/2.a49d4355.chunk.js"": ""/static/js/2.a49d4355.chunk.js"",
+    ""static/js/2.a49d4355.chunk.js.map"": ""/static/js/2.a49d4355.chunk.js.map"",
+  },
+  ""entrypoints"": [
+    ""static/js/runtime-main.62ca1b0d.js"",
+    ""static/css/main.43b75f57.chunk.css"",
+    ""static/js/main.04394e4f.chunk.js"",
+	""static/css/another-stylesheet.css""
+  ]
+}";
+
 		[Fact]
 		public void ExecuteWithBabelWithNoNewThread()
 		{
@@ -28,7 +48,7 @@ namespace React.Tests.Core
 			environment.ExecuteWithBabel<int>("foo");
 			mocks.Engine.Verify(x => x.CallFunction<int>("foo"), Times.Exactly(1));
 		}
-#if NET452 || NETCOREAPP2_0
+#if NET452 || NETCOREAPP
 
 		[Fact]
 		public void ExecuteWithBabelWithNewThread()
@@ -168,6 +188,44 @@ namespace React.Tests.Core
 			environment.GetInitJavaScript();
 
 			mocks.Engine.Verify(x => x.Evaluate<string>("console.getCalls()"), Times.Exactly(ssrTimes));
+		}
+
+		[Fact]
+		public void ScriptTagsReturned()
+		{
+			var mocks = new Mocks();
+			mocks.Config.SetupGet(x => x.ReactAppBuildPath).Returns("~/dist");
+			mocks.FileSystem.Setup(x => x.ReadAsString("~/dist/asset-manifest.json")).Returns(_testAppManifest);
+			var environment = mocks.CreateReactEnvironment();
+
+			var scripts = environment.GetScriptPaths().ToList();
+			Assert.Equal(2, scripts.Count);
+			Assert.Equal("static/js/runtime-main.62ca1b0d.js", scripts[0]);
+			Assert.Equal("static/js/main.04394e4f.chunk.js", scripts[1]);
+		}
+
+		[Fact]
+		public void StyleTagsReturned()
+		{
+			var mocks = new Mocks();
+			mocks.Config.SetupGet(x => x.ReactAppBuildPath).Returns("~/dist");
+			mocks.FileSystem.Setup(x => x.ReadAsString("~/dist/asset-manifest.json")).Returns(_testAppManifest);
+			var environment = mocks.CreateReactEnvironment();
+
+			var styles = environment.GetStylePaths().ToList();
+			Assert.Equal(2, styles.Count);
+			Assert.Equal("static/css/main.43b75f57.chunk.css", styles[0]);
+			Assert.Equal("static/css/another-stylesheet.css", styles[1]);
+		}
+
+		[Fact]
+		public void SkipLazyInit()
+		{
+			var mocks = new Mocks();
+			var environment = mocks.CreateReactEnvironment();
+
+			environment.CreateComponent("ComponentName", new { }, skipLazyInit: true);
+			Assert.Equal("", environment.GetInitJavaScript());
 		}
 
 		public class Mocks

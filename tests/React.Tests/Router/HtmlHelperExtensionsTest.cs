@@ -92,7 +92,8 @@ namespace React.Tests.Router
 			public ReactRouterMocks(
 				Mock<IReactSiteConfiguration> conf,
 				Mock<IReactEnvironment> env,
-				Mock<IReactIdGenerator> idGenerator
+				Mock<IReactIdGenerator> idGenerator,
+				bool clientOnly = false
 			)
 			{
 				config = conf;
@@ -126,7 +127,7 @@ namespace React.Tests.Router
 			var config = ConfigureMockConfiguration();
 			var environment = ConfigureMockEnvironment();
 			var reactIdGenerator = ConfigureReactIdGenerator();
-			var routerMocks = new ReactRouterMocks(config, environment, reactIdGenerator);
+			var routerMocks = new ReactRouterMocks(config, environment, reactIdGenerator, true);
 			var htmlHelperMock = new HtmlHelperMocks();
 
 			environment.Verify(x => x.ReturnEngineToPool(), Times.Never);
@@ -150,7 +151,7 @@ namespace React.Tests.Router
 			var htmlHelperMock = new HtmlHelperMocks();
 			var environment = ConfigureMockEnvironment();
 			var reactIdGenerator = ConfigureReactIdGenerator();
-			var routerMocks = new ReactRouterMocks(config, environment, reactIdGenerator);
+			var routerMocks = new ReactRouterMocks(config, environment, reactIdGenerator, true);
 
 			var result = HtmlHelperExtensions.ReactRouter(
 				htmlHelper: htmlHelperMock.htmlHelper.Object,
@@ -261,12 +262,44 @@ namespace React.Tests.Router
 
 			if (withOverriddenPath)
 			{
-				mocks.Engine.Verify(x => x.Evaluate<string>(@"ReactDOMServer.renderToString(React.createElement(ComponentName, Object.assign({}, { location: '/test2?b=1&c=2', context: context })))"));
+				mocks.Engine.Verify(x => x.Evaluate<string>(@"ReactDOMServer.renderToString(React.createElement(ComponentName, Object.assign({}, { location: ""/test2?b=1&c=2"", context: context })))"));
 			}
 			else
 			{
-				mocks.Engine.Verify(x => x.Evaluate<string>(@"ReactDOMServer.renderToString(React.createElement(ComponentName, Object.assign({}, { location: '/test?a=1&b=2', context: context })))"));
+				mocks.Engine.Verify(x => x.Evaluate<string>(@"ReactDOMServer.renderToString(React.createElement(ComponentName, Object.assign({}, { location: ""/test?a=1&b=2"", context: context })))"));
 			}
+		}
+
+		[Theory]
+		[InlineData("?a='\"1", "?a='\\\"1")]
+		public void ShouldEscapeQuery(string query, string expected)
+		{
+			var mocks = ConfigureMockReactEnvironment();
+			ConfigureMockConfiguration();
+			ConfigureReactIdGenerator();
+
+			mocks.Engine.Setup(x => x.Evaluate<string>("JSON.stringify(context);"))
+						.Returns("{ status: 200 }");
+
+			var requestMock = new Mock<HttpRequestBase>();
+			requestMock.SetupGet(x => x.Path).Returns("/test");
+			var queryStringMock = new Mock<NameValueCollection>();
+			queryStringMock.Setup(x => x.ToString()).Returns(query);
+			requestMock.SetupGet(x => x.QueryString).Returns(queryStringMock.Object);
+
+			var htmlHelperMock = new HtmlHelperMocks(requestMock.Object);
+
+			var result = HtmlHelperExtensions.ReactRouter(
+				htmlHelper: htmlHelperMock.htmlHelper.Object,
+				componentName: "ComponentName",
+				props: new { },
+				path: null,
+				contextHandler: (response, context) => response.StatusCode = context.status.Value
+			);
+
+			htmlHelperMock.httpResponse.VerifySet(x => x.StatusCode = 200);
+
+			mocks.Engine.Verify(x => x.Evaluate<string>(@"ReactDOMServer.renderToString(React.createElement(ComponentName, Object.assign({}, { location: ""/test" + expected + @""", context: context })))"));
 		}
 
 		[Fact]

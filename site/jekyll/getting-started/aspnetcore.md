@@ -4,7 +4,19 @@ layout: docs
 title: Getting Started (ASP.NET Core)
 ---
 
-Just want to see the code? Check out the [sample project](https://github.com/reactjs/React.NET/tree/master/src/React.Sample.Webpack.CoreMvc).
+#### 👀  Just want to see the code? Check out the [sample project](https://github.com/reactjs/React.NET/tree/main/src/React.Template/reactnet-webpack).
+
+## For new projects:
+
+```
+dotnet new -i React.Template
+dotnet new reactnet-vanilla
+dotnet run
+```
+
+#### Heads up! This configuration only supports globally-scoped modules. If you're planning on using `require` or `import` module syntax in your application, use the `reactnet-webpack` template instead for webpack support.
+
+## For existing projects:
 
 This guide covers enabling server-side rendering and Babel compilation. Getting started with ReactJS.NET on ASP.NET Core requires a few more steps compared to previous versions of ASP.NET and MVC. If you want a step-by-step guide on configuring a brand new site, see [the ReactJS.NET tutorial for ASP.NET Core](/tutorials/aspnetcore.html).
 
@@ -90,4 +102,4 @@ You're done! You can now call `Html.React` from within Razor files:
 
 If you need support for non-Windows platforms, please see the [Linux/macOS guide](/getting-started/chakracore.html)
 
-Check out the [sample project](https://github.com/reactjs/React.NET/tree/master/src/React.Sample.Webpack.CoreMvc) for a working demo.
+Check out the [sample project](https://github.com/reactjs/React.NET/tree/main/src/React.Template/reactnet-webpack) for a working demo.

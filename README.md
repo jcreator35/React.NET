@@ -1,8 +1,8 @@
 # [ReactJS.NET](http://reactjs.net/)
 
-ReactJS.NET is a library that makes it easier to use [Babel](http://babeljs.io/) along with Facebook's [React](http://facebook.github.io/react/) and [JSX](http://facebook.github.io/react/docs/jsx-in-depth.html) from C#.
+ReactJS.NET is a library that makes it easier to use [Babel](http://babeljs.io/) along with Facebook's [React](https://reactjs.org/) and [JSX](https://reactjs.org/docs/jsx-in-depth.html) from C#.
 
-[![Build status](https://img.shields.io/appveyor/ci/Daniel15/react-net/master.svg)](https://ci.appveyor.com/project/Daniel15/react-net/branch/master)&nbsp;
+![.NET Core Desktop](https://github.com/reactjs/React.NET/workflows/.NET%20Core%20Desktop/badge.svg)
 [![NuGet version](http://img.shields.io/nuget/v/React.Core.svg)](https://www.nuget.org/packages/React.Core/)
 [![Download count](https://img.shields.io/nuget/dt/React.Core.svg)](https://www.nuget.org/packages/React.Core/)
 
@@ -27,58 +27,18 @@ ReactJS.NET is a library that makes it easier to use [Babel](http://babeljs.io/)
 
 # Quick Start
 
-Install the package
-
-```powershell
-Install-Package React.Web.Mvc4 # For ASP.NET MVC 4 or 5
-Install-Package React.AspNet   # For ASP.NET Core MVC
+```
+dotnet new -i React.Template
+dotnet new reactnet-vanilla
+dotnet run
 ```
 
-Install a Javascript engine and configure as the default (more info [here](https://reactjs.net/getting-started/aspnet.html) on how this works)
+#### Planning on using `require` or `import` module syntax in your application? Use the `reactnet-webpack` template instead for webpack support.
 
-```powershell
-Install-Package JavaScriptEngineSwitcher.V8
-Install-Package JavaScriptEngineSwitcher.V8.Native.win-x64
-```
+See also:
 
-```csharp
-public static class ReactConfig
-{
-    public static void Configure()
-    {
-        ReactSiteConfiguration.Configuration
-            .AddScript("~/Content/HelloWorld.jsx");
-
-        JsEngineSwitcher.Current.DefaultEngineName = V8JsEngine.EngineName;
-        JsEngineSwitcher.Current.EngineFactories.AddV8();
-    }
-}
-```
-
-Create JSX files
-
-```javascript
-// /Scripts/HelloWorld.jsx
-const HelloWorld = props => {
-	return <div>Hello {props.greeting}</div>;
-};
-```
-
-Reference the JSX files from your HTML
-
-```html
-<!-- Place this where you want the component div to render -->
-@Html.React("HelloWorld", new { Greeting = "friends!" });
-
-<!-- Place these at the end of the page -->
-<script src="@Url.Content("~/Scripts/HelloWorld.jsx")"></script>
-@Html.ReactInitJavaScript();
-```
-
-Now you can use the `HelloWorld` component.
-
-For information on more advanced topics (including precompilation and
-server-side rendering), check out [the documentation](http://reactjs.net/docs)
+- [Getting Started](https://reactjs.net/getting-started/aspnetcore.html)
+- [Tutorial](https://reactjs.net/tutorials/aspnetcore.html)
 
 ## Building Manually and Contributing
 

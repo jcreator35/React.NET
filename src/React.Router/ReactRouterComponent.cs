@@ -80,9 +80,11 @@ namespace React.Router
 			writer.Write(ComponentName);
 			writer.Write(", Object.assign(");
 			writer.Write(_serializedProps);
-			writer.Write(", { location: '");
-			writer.Write(_path);
-			writer.Write("', context: context }))");
+			writer.Write(", { location: ");
+			writer.Write(JsonConvert.SerializeObject(
+					_path,
+					_configuration.JsonSerializerSettings));
+			writer.Write(", context: context }))");
 		}
 
 		/// <summary>
@@ -100,7 +102,8 @@ namespace React.Router
 				writer.Write("window.addEventListener('DOMContentLoaded', function() {");
 			}
 
-			writer.Write("ReactDOM.hydrate(");
+			writer.Write(
+				!_configuration.UseServerSideRendering || ClientOnly ? "ReactDOM.render(" : "ReactDOM.hydrate(");
 			base.WriteComponentInitialiser(writer);
 			writer.Write(", document.getElementById(\"");
 			writer.Write(ContainerId);
